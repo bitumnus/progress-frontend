@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from "react";
 import Section from "../Section";
-import Paper from '@mui/material/Paper';
 import axios from "axios";
 
-export default function ContainerList({checkList}) {
+export default function ContainerList({checkList, setFanFact}) {
     const [checked, setChecked] = useState([]);
-    const [fanFact, setFanFact] = useState('');
 
     const handleCheck = async (event) => {
         let updatedList = [...checked];
@@ -68,7 +66,6 @@ export default function ContainerList({checkList}) {
                         checkedList={checked[index]}
                     />
                 ))}
-            {fanFact && <Paper elevation={3} > {fanFact} </Paper>}
         </div>
     )
 }
