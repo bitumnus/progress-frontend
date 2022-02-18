@@ -10,6 +10,7 @@ import ContainerList from "./Components/ContainerList";
 function App() {
     const [list, setList] = useState([]);
     const [fanFact, setFanFact] = useState('');
+    const [error, setError] = useState('');
 
     useEffect( () => {
         const listFromStore = localStorage.getItem('list');
@@ -18,24 +19,34 @@ function App() {
         }
 
         async function fetchData() {
-            localStorage.setItem('checkedList', '');
-            const response = await axios.get('http://localhost:3000/api/v1/getList');
-            setList(response.data);
-            localStorage.setItem('list', JSON.stringify(response.data));
+            try {
+                localStorage.setItem('checkedList', '');
+                const response = await axios.get('http://localhost:3000/api/v1/getList')
+                setList(response.data);
+                localStorage.setItem('list', JSON.stringify(response.data));
+            } catch (error) {
+                setError(error);
+            }
         }
         fetchData();
     }, [])
+
     return (
         <div className='app'>
-            <Card sx={{ minWidth: 275 }}>
-                <CardContent>
-                    <div className='title'>My startup progress:</div>
-                    { list && <ContainerList checkList={list} setFanFact={setFanFact} /> }
-                </CardContent>
-            </Card>
-            <CardActions>
-                <Button size="small">{fanFact}</Button>
-            </CardActions>
+            {error
+                ? <div>{error}</div>
+                : <>
+                    <Card sx={{minWidth: 275}}>
+                        <CardContent>
+                            <div className='title'>My startup progress:</div>
+                            {list && <ContainerList checkList={list} setFanFact={setFanFact}/>}
+                        </CardContent>
+                    </Card>
+                    <CardActions>
+                        <Button size="small">{fanFact}</Button>
+                    </CardActions>
+                </>
+            }
         </div>
     );
 }

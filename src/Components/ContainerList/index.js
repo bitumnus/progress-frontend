@@ -30,13 +30,21 @@ export default function ContainerList({checkList, setFanFact}) {
         setFanFact('');
         for (let i = section + 1; i < list.length; i++) {
             list[i].options.fill(false);
+            list[i].disabled = false;
         }
         return list;
     }
 
     const showFanFact = async () => {
-        const response = await axios.get('http://localhost:3000/api/v1/getRandom');
-        setFanFact(response.data);
+        let fanFact;
+        await axios.get('http://localhost:3000/api/v1/getRandom')
+            .then(res => {
+                fanFact = res.data;
+            })
+            .catch(e => {
+                fanFact = `Error: ${e}. Try again :)`;
+            });
+        setFanFact(fanFact);
     }
 
     useEffect(() => {
